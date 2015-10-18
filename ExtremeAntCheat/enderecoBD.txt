@@ -1,0 +1,9 @@
+PostgreSQL 9.2 database added.  Please make note of these credentials:
+
+   Name:berti_bd
+   Host:216.218.192.170 
+   Porta: 5432
+   user name: berti_bd
+
+Connection URL: postgresql://216.218.192.170
+

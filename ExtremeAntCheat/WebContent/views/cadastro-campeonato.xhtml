@@ -1,0 +1,129 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui" >
+			    
+	<ui:define name="conteudoSite">
+		<!--Modal de restricao  -->
+		<p:dialog modal="true" id="modalRestricao" widgetVar="modalRestricao" header="Aviso"   
+        	draggable="false" closable="false">
+        	<h3>Tela Bloquiada - Inscrição ainda nao foi inciada</h3>
+        	<a style="margin-left:35px" href="index.xhtml" >Voltar</a>
+		</p:dialog>
+	
+		<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl/>
+		</p:outputPanel>
+		
+		<!-- Loader para cadastro do player -->
+		<p:dialog modal="true" id="modalLoader" widgetVar="statusDialogAguarde" header="Aguarde estamos inscrevendo voce no campeonato.."   
+        	draggable="false" closable="false">
+    		<p:graphicImage width="336" height="15" library="image" name="loaders07.gif" />
+		</p:dialog>
+		
+		<!-- Formulario de cadastro -->
+		<h:form prependId="false" enctype="multipart/form-data">
+			<p:panel header="Cadastro de participantes do campionato" style="height:500px;">
+			
+				<!-- Mensagem de retorno do servidor (apnes para esse form) -->
+				<p:messages autoUpdate="true" closable="true"  />
+				
+				<p:panel style="width:140px;height:166px;float:right;" header="Foto">
+					<div class="foto" style="width:113px;height:91px;background:white;
+							border: solid 5px;margin-bottom: 5px;border-radius:15px">
+						
+						<h:panelGroup layout="block" rendered="#{cadastroJogadorWarfaceController.redenderizaFoto == false}"> 
+							<img id="view-img" src="" width="110" height="90" />
+						</h:panelGroup>		
+						<h:graphicImage width="110" height="90" value="#{cadastroJogadorWarfaceController.jogadorWarface.foto}" 
+							rendered="#{cadastroJogadorWarfaceController.redenderizaFoto}" />	
+					</div>
+					<div class="boxFileUpload" style="width: 200px">
+						<p:fileUpload id="imgInput" value="#{cadastroJogadorWarfaceController.foto}" required="true" 
+							label="Buscar" requiredMessage="Foto Obrigatoria" style="margin:0 0 0 5px;" mode="simple" skinSimple="true"/>
+						<!-- Carregadno preview da imagem -->
+						<script src="../resources/js/funcaoPreviewImg.js"></script>
+						
+					</div>
+				</p:panel>
+			
+				<div class="boxNmejogador" >
+					<p:outputLabel for="nomeJogador" value="Nome completo do jogador" /><br/>
+					<p:inputText id="nomeJogador" requiredMessage="Nome Obrigatorio" value="#{cadastroJogadorWarfaceController.jogadorWarface.nome}" 
+						required="true" style="width:400px" /><br/><br/>
+				</div>
+				
+				<p:outputLabel for="loginwarface" value="Login do warface" /><br/>
+				<p:inputText id="loginwarface" requiredMessage="Login do warface Obrigatorio" value="#{cadastroJogadorWarfaceController.jogadorWarface.loginWarface}"
+					required="true" style="width:400px" /><br/><br/>
+				
+				<div class="boxNick" style="float:left">
+					<p:outputLabel for="nick" value="Nick completo jogador do warface" /><br/>
+					<p:inputText id="nick" requiredMessage="Nick do jogador Obrigatorio" value="#{cadastroJogadorWarfaceController.jogadorWarface.nickJogo}"
+						required="true" style="width:267px" /><br/><br/>
+				</div>	
+				
+				<p:outputLabel style="margin:0 0 0 5px" value="Sexo" /><br/>
+				<p:selectOneMenu id="console" value="#{cadastroJogadorWarfaceController.jogadorWarface.sexo}" style="width:125px;margin:-2px 0 0 5px">
+            		<f:selectItem itemLabel="Masculino" itemValue="m" />
+            		<f:selectItem itemLabel="Feminino" itemValue="f" />
+            		<f:selectItem itemLabel="Outros" itemValue="o" />
+		        </p:selectOneMenu><br/><br/>
+		        
+		        <p:outputLabel for="email" value="Email que foi cadastrado no warface" /><br/>
+				<p:inputText id="email" requiredMessage="Email Obrigatorio" value="#{cadastroJogadorWarfaceController.jogadorWarface.email}" 
+						required="true" style="width:400px" /><br/><br/>
+				
+				<div class="boxData">
+					<p:outputLabel for="dataNacimento"  value="Data de Nacimento" /><br/>
+					<p:calendar id="dataNacimento" mask="99/99/9999" pattern="dd/MM/yyyy"  value="#{cadastroJogadorWarfaceController.jogadorWarface.dataNacimento}" 
+						required="true" style="width:116px" showOn="button" />
+				</div>
+				
+				<div class="boxCodigoAntxiter">
+					<p:outputLabel for="codigoAntxiter" value="Crie um codigo de indetificação para AntXiter" />
+					<p:password id="codigoAntxiter" requiredMessage="Codigo de indetificação para AntXiter Obrigatorio" 
+						value="#{cadastroJogadorWarfaceController.jogadorWarface.codigoAntXiter}"
+						required="true" style="width:262px"  feedback="true" />
+				</div>
+				
+				<p:commandButton update="cadastroFotoRende" value="Inscrever-se" ajax="false" icon="ui-icon-check" 
+					actionListener="#{cadastroJogadorWarfaceController.save()}" rendered="#{cadastroJogadorWarfaceController.redenderizaFoto == false}"
+					style="width:429px;height:50px;margin:30px 0 0 -151px" onclick="PF('statusDialogAguarde').show();" oncomplete="PF('statusDialogAguarde').hide();"  />
+			</p:panel>
+		</h:form>
+		<script>
+			  PrimeFaces.locales['pt'] = {  
+              closeText: 'Fechar',  
+              prevText: 'Anterior',  
+              nextText: 'Próximo',  
+              currentText: 'Começo',  
+              monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],  
+              monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'],  
+              dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],  
+              dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],  
+              dayNamesMin: ['D','S','T','Q','Q','S','S'],  
+              weekHeader: 'Semana',  
+              firstDay: 1,  
+              isRTL: false,  
+              showMonthAfterYear: false,  
+              yearSuffix: '',  
+              timeOnlyTitle: 'Só Horas',  
+              timeText: 'Tempo',  
+              hourText: 'Hora',  
+              minuteText: 'Minuto',  
+              secondText: 'Segundo',  
+              currentText: 'Data Atual',  
+              ampm: false,  
+              month: 'Mês',  
+              week: 'Semana',  
+              day: 'Dia',  
+              allDayText : 'Todo Dia'  
+            };
+		</script>	
+	</ui:define>			    			    
+</ui:composition>			    

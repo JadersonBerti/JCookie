@@ -1,0 +1,143 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui">
+			    
+	<ui:define name="conteudoSite">
+	<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl/>
+		</p:outputPanel>
+		
+		<p:dialog header="Valida Chave" modal="true" closable="false" widgetVar="verificaChave">
+			<h:form>
+				<center>
+					<p:messages autoUpdate="true" closable="true" /><br/>
+					<p:outputLabel for="id_insira_chave" value="Insira sua chave de cadastro" /><br/>
+					<p:inputText style="width:264px" id="id_insira_chave" required="true" requiredMessage="Chave Obrigatoria!" 
+						value="#{cadastroUsuarioController.serialPlayer.serialHash}" /><br/><br/>
+					<p:commandButton update=":messageSerial" onclick="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" value="Validar" actionListener="#{cadastroUsuarioController.verificaChave()}"/>	
+					<p:commandButton immediate="true" value="Sair" actionListener="#{cadastroUsuarioController.voltarIndex()}"/>
+				</center>
+			</h:form>			
+		</p:dialog>
+	
+		<h:form id="messageSerial" prependId="false" enctype="multipart/form-data">
+			<p:panel header="Cadastro de usuário para utilização do AntCheat" style="height:700px;">
+				<h:panelGroup rendered="#{cadastroUsuarioController.autenticado == true}">
+					<h:outputText value="- Nome da chave: " />
+					<h:outputText value="#{cadastroUsuarioController.serialPlayer.remetente}" /><br/>
+					<h:outputText value="- Serial chave: " />
+					<h:outputText value="#{cadastroUsuarioController.serialPlayer.serialHash}" /><br/>
+					<h:outputText value="- Numero de contas liberadas: " />
+					<h:outputText value="#{cadastroUsuarioController.serialPlayer.numeroChaves}" />
+				</h:panelGroup>
+			
+				<!-- Mensagem de retorno do servidor (apenas para esse form) -->
+				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+				
+				<p:panel style="width:140px;height:166px;float:right;margin:-54px -6px 0 0" header="Foto">
+					<div class="foto" style="width:113px;height:91px;background:white;
+							border: solid 5px;margin-bottom: 5px;border-radius:15px">
+						
+						<h:panelGroup layout="block" rendered="#{cadastroUsuarioController.redenderizaFoto == false}"> 
+							<img id="view-img" src="" width="110" height="90" />
+						</h:panelGroup>		
+						<h:graphicImage width="110" height="90" value="#{cadastroUsuarioController.usuario.foto}" 
+							rendered="#{cadastroUsuarioController.redenderizaFoto}" />	
+					</div>
+					<div class="boxFileUpload" style="width: 200px">
+						<p:fileUpload disabled="#{cadastroUsuarioController.autenticado == false}" id="imgInput" value="#{cadastroUsuarioController.foto}" required="false" 
+							label="Buscar" style="margin:0 0 0 5px;" mode="simple" skinSimple="true"/>
+						<!-- Carregadno preview da imagem -->
+						<script src="../resources/js/funcaoPreviewImg.js"></script>
+						
+					</div>
+				</p:panel><br/>
+			
+				<div class="boxNmejogador" >
+					<p:outputLabel for="nomeJogador" value="Nome completo do jogador" /><br/>
+					<p:inputText disabled="#{cadastroUsuarioController.autenticado == false}" id="nomeJogador" requiredMessage="Nome Obrigatorio" value="#{cadastroUsuarioController.usuario.nome}" 
+						required="true" style="width:400px" /><br/><br/>
+				</div>
+				
+				<div class="boxNick" style="float:left">
+					<p:outputLabel for="nick" value="Nick completo jogador do warface" /><br/>
+					<p:inputText disabled="#{cadastroUsuarioController.autenticado == false}" id="nick" requiredMessage="Nick do jogador Obrigatorio" value="#{cadastroUsuarioController.usuario.nickJogo}"
+						required="true" style="width:267px" >
+							<f:ajax event="change" execute="@this" render="nick" listener="#{cadastroUsuarioController.validaNick()}" />
+						</p:inputText><br/><br/>
+				</div>	
+				
+				<p:outputLabel style="margin:0 0 0 5px" value="Sexo" /><br/>
+				<p:selectOneMenu disabled="#{cadastroUsuarioController.autenticado == false}" id="console" value="#{cadastroUsuarioController.usuario.sexo}" style="width:125px;margin:-2px 0 0 5px">
+            		<f:selectItem itemLabel="Masculino" itemValue="m" />
+            		<f:selectItem itemLabel="Feminino" itemValue="f" />
+            		<f:selectItem itemLabel="Outros" itemValue="o" />
+		        </p:selectOneMenu><br/><br/>
+		        
+		        <div class="boxData">
+		        	<p:outputLabel for="email" value="Email do jogador" /><br/>
+					<p:inputText disabled="#{cadastroUsuarioController.autenticado == false}" id="email" requiredMessage="Email Obrigatorio" value="#{cadastroUsuarioController.usuario.email}" 
+						required="true" style="width:198px" />
+				</div>
+				
+				<div style="width: 434px">
+					<p:outputLabel for="dataNacimento"  value="Data de Nacimento" /><br/>
+					<p:calendar disabled="#{cadastroUsuarioController.autenticado == false}" id="dataNacimento" mask="99/99/9999" pattern="dd/MM/yyyy" value="#{cadastroUsuarioController.usuario.dataNacimento}" 
+						required="true" style="width:" showOn="button" /><br/>
+				</div><br/>
+				
+				<div class="boxCodigoAntxiter">
+					<p:outputLabel for="senhaAntxiter" value="Crie um senha para logar no AntCheat" />
+					<p:password id="senhaAntxiter" requiredMessage="Senha de indetificação para AntXiter Obrigatorio" 
+						value="#{cadastroUsuarioController.usuario.senhaAntXiter}" disabled="#{cadastroUsuarioController.autenticado == false}"
+						required="true" style="width:410px" converterMessage="Senhas não conferem" match="confirmeSenhaAntxiter" feedback="true" />
+				</div><br/>
+				
+				<div class="boxCodigoAntxiter">
+					<p:outputLabel for="confirmeSenhaAntxiter" value="Confirmar a senha" />
+					<p:password disabled="#{cadastroUsuarioController.autenticado == false}" id="confirmeSenhaAntxiter" requiredMessage="Confimação de indetificação para AntXiter Obrigatorio" 
+						value="#{cadastroUsuarioController.usuario.senhaAntXiter}"
+						required="true" style="width:410px" feedback="true" />
+				</div><br/>
+				
+				<p:commandButton disabled="#{cadastroUsuarioController.autenticado == false}" update="cadastroFotoRende,messages" value="Inscrever-se" ajax="false" icon="ui-icon-check" 
+					actionListener="#{cadastroUsuarioController.save()}" rendered="#{cadastroUsuarioController.redenderizaFoto == false}"
+					style="width:429px;height:50px;margin:30px 0 0 0" onclick="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();"  />
+			</p:panel>
+		</h:form>
+		<script>
+			  PrimeFaces.locales['pt'] = {  
+              closeText: 'Fechar',  
+              prevText: 'Anterior',  
+              nextText: 'Próximo',  
+              currentText: 'Começo',  
+              monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],  
+              monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'],  
+              dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],  
+              dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],  
+              dayNamesMin: ['D','S','T','Q','Q','S','S'],  
+              weekHeader: 'Semana',  
+              firstDay: 1,  
+              isRTL: false,  
+              showMonthAfterYear: false,  
+              yearSuffix: '',  
+              timeOnlyTitle: 'Só Horas',  
+              timeText: 'Tempo',  
+              hourText: 'Hora',  
+              minuteText: 'Minuto',  
+              secondText: 'Segundo',  
+              currentText: 'Data Atual',  
+              ampm: false,  
+              month: 'Mês',  
+              week: 'Semana',  
+              day: 'Dia',  
+              allDayText : 'Todo Dia'  
+            };
+		</script>
+	</ui:define>
+</ui:composition>	

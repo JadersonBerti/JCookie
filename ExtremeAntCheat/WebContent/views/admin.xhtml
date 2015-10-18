@@ -1,0 +1,193 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui" >
+			    
+	<ui:define name="conteudoSite">
+		<h2>Porque devira ultilizar o Extreme AntXiter
+				<!-- 
+				<li><a title="Inscrevace-se para campionato" href="cadastro-campeonato.xhtml">Inscreva-se para campeonato</a></li>
+				<li><a title="Tabela de jogadores" href="tabela-jogadores.xhtml">Tabela de jogadores</a></li>
+				 -->
+			</h2>
+				<p>
+					<strong>O sistema Extreme AntXiter é um antXiter que não precisa se injetar 
+						com Jogo ele trabalha ao lado do jogo protejendo contra processos maliciosos, monitorando serviços e movimentos no sistema. </strong>
+				</p>
+			
+			<strong>Oque o Extreme AntXiter Oferece:</strong>
+			<ul style="margin:18px">
+				<li style="height: 27px">Painel de controle para administradores</li>
+				<li style="height: 27px">O Usuario tem a opeção de fazer algumas operações manuais.</li>
+				<li style="height: 27px">Screenshots da tela e jogo </li>
+				<li style="height: 27px">Screenshots dos Processos/Serviços.</li>
+				<li style="height: 27px">Sistema Verifica Automaticamente Processos</li>
+				<li style="height: 27px">Sistema Verifica Automaticamente Serviços</li>
+				<li style="height: 27px">Detecção de injeção</li>
+			</ul>
+		<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl autoUpdate="true"/>
+		</p:outputPanel>
+		
+		<p:dialog header="BlackList - Novos usuarios" width="525" height="300" widgetVar="mdl-blackList" 
+			modal="true" draggable="false" closable="true">
+			<p:ajax event="close" listener="#{administrativoController.limpaBlackListAdminIsView}" />
+			
+			<h:form id="blackList">
+				<p:remoteCommand onstart="PF('mdl-blackList').show();" />
+				<p:media id="caminhoAudio" value="#{administrativoController.caminhoAudio}" width="200" height="20" 
+					style="visibility: hidden;" player="quicktime">
+	    			<f:param name="autoPlay" value="false" />
+	    			<f:param name="enablejavascript" value="true"/>
+				</p:media>
+			
+				<ui:repeat var="item" value="#{administrativoController.blackList}">
+					<p:panel style="width:217px; height:90px;float:left;margin:5px 24px 0 0" header="#{item.nickJogo}">
+						<p:outputLabel value="Nick: #{item.nickJogo}" /><br/>
+						<p:outputLabel value="Nome do xiter: #{item.nome}" /><br/>
+					</p:panel>
+				</ui:repeat>
+			</h:form>
+		</p:dialog>
+		
+		<!-- Login Painel Administrador -->
+		<p:dialog widgetVar="admin_login_paienl" id="admin_login_paienl" header="Login para painel administrativo"
+			modal="true" draggable="false" closable="false">
+			<h:form>
+				<p:messages autoUpdate="true" id="msg-login-admin-painel" />
+				<center>
+					<p:outputLabel value="Email" /><br/>
+					<p:inputText value="#{administrativoController.email}" /><br/><br/>	
+							
+					<p:outputLabel value="Senha" /><br/>
+					<p:password value="#{administrativoController.senha}" /><br/><br/>
+					
+					<p:commandButton style="margin:0 5px 0 0" update=":painel,:tabelas-com-eventos,msg-login-admin-painel" value="Autenticar" actionListener="#{administrativoController.loginAdmin()}" />
+					<p:commandButton value="Sair" style="width:83px" ajax="false" action="#{administrativoController.indexRedirect()}"/>
+				</center>			
+			</h:form>
+		 </p:dialog>
+		 
+		 <p:dialog header="Relatorio de eventos" widgetVar="mdl-tabelas-com-eventos" 
+		 	modal="true" width="995" height="400" draggable="true" closable="true">
+		 	<h:form id="tabelas-com-eventos">
+		 		<p:dataTable var="item" value="#{administrativoController.contadorTempos}">
+		 			<f:facet name="header">
+	          			  Relatorio de Eventos Concluidos
+	       			</f:facet>
+		 			<p:column headerText="Data de Inicio">
+		 				<p:outputLabel value="#{item.inicio}">
+		 					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+		 				</p:outputLabel>
+		 			</p:column>
+		 			<p:column headerText="Administrador que Iniciou">
+		 				#{item.nomeAdminIncio}
+		 			</p:column>
+		 			<p:column headerText="Data de Termino">
+		 				<p:outputLabel value="#{item.termino}">
+		 					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+		 				</p:outputLabel>
+		 			</p:column>
+		 			<p:column headerText="Administrador que Finalizou">
+		 				#{item.nomeAdminTermino}
+		 			</p:column>
+		 			<p:column headerText="Tempo Gasto Por Evento">
+		 				<h:outputText style="float:right;" value="#{item.totalHoras}" />
+		 			</p:column>
+		 			<f:facet name="footer">
+		 				Relatorio
+				 		<p:outputLabel style="float:right;margin:-2px -4px 0 0;padding:1px" 
+				 			id="totalHoraContadorTempo" value="#{administrativoController.totalHoraContadorTempo}" />
+	       			 </f:facet>
+		 		</p:dataTable>
+		 	</h:form>
+		 </p:dialog>
+	
+		<!-- Painel Administrador -->
+		<p:dialog widgetVar="admin_painel" width="1100" height="500" id="admin_painel" header="Painel administrativo"
+			 minimizable="true" maximizable="true">
+			<h:form id="painel">
+				<p:panel style="width:400px;float:left" header="Retorno do comando">
+					<p:messages autoUpdate="true" id="msg-painel-administrativo" />
+					<!-- Renderizar imagem do jogo do uaurio-->
+					<h:graphicImage id="image" width="380" height="300" value="#{administrativoController.printTela}" />
+					
+					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Print" type="button" icon="ui-icon-print" style="display:block;float:left;width:95px;margin-left:85px">
+	   					 <p:printer target="image" />
+					</p:commandButton>
+					
+					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Download" ajax="false" icon="ui-icon-arrowthick-1-s">
+	      				<p:fileDownload value="#{administrativoController.file}" />
+	  				</p:commandButton>
+	  				
+	  				<center>
+		  				<p:commandButton action="#{administrativoController.exportTxt()}" rendered="#{administrativoController.notNullProcessosTela}" value="Download"
+		  					ajax="false" icon="ui-icon-arrowthick-1-s" />
+					</center>
+					
+				</p:panel>
+				
+				<p:panel header="Dados da liga" style="width:560px;float:right">
+					<p:outputLabel value="Nome da Liga Responsavel: #{administrativoController.serialPlayer.remetente} |" />
+					<br/><p:outputLabel style="float:right;margin:-16px -10px 0 0px" 
+						value="Chave pra ativação :#{administrativoController.serialPlayer.serialHash}" />
+					
+					<br/><p:outputLabel value="Numero de chaves liberadas: #{administrativoController.serialPlayer.numeroChaves} |" />
+					<p:outputLabel style="margin:0 0 0 5px" 
+						value="Numero de chaves usadas: #{administrativoController.serialPlayer.numeroChavesUsadas} |" />
+					
+					<p:growl for="msg-status-servidor" id="msg-status-servidor" autoUpdate="true" life="5000" />
+					<br/><p:outputLabel style="float:right;margin:-16px 97px 0 0" value="Servidor:" />
+					<p:inputSwitch style="float:right;margin:-22px -114px 0 0" 
+						value="#{administrativoController.serialPlayer.statusServidor}">
+							<p:ajax listener="#{administrativoController.liberarServidorLiga()}" update="msg-status-servidor,msg-contador-tempo" />
+					</p:inputSwitch><br/>
+					
+					<p:outputLabel id="msg-contador-tempo" value="#{administrativoController.msgContadorTempo}" /><br/>
+					<p:commandButton style="float:right;margin:6px 0 0 100px" value="Ver Tabela do mes" 
+						onclick="PF('mdl-tabelas-com-eventos').show();" actionListener="#{administrativoController.getContadorTemposBySerialPlayer()}"
+					    update=":tabelas-com-eventos"/>
+					
+				</p:panel><br/><br/>
+			
+				<p:poll interval="10" update="tabelaPlayerOn" listener="#{administrativoController.getBlackListAdminIsView()}" />
+				<p:dataTable id="tabelaPlayerOn" style="width:565px;float:right" value="#{administrativoController.players}" var="item">
+					 <f:facet name="header">
+	          			  Tabela de players online
+	       			 </f:facet>
+					<p:column headerText="Id">
+						#{item.id}
+					</p:column>
+					<p:column headerText="Nome Player">
+						#{item.nome}
+					</p:column>
+					<p:column headerText="Data">
+						#{item.data}
+					</p:column>
+					<p:column headerText="Usuario Id">
+						#{item.usuario_id}
+					</p:column>
+					<p:column headerText="Informações Gerais">
+						<p:dialog header="Detalhes" widgetVar="mdl_detalhes">
+							<h:outputText value="#{item.detalhes}" />
+						</p:dialog>
+						<p:commandLink rendered="#{administrativoController.isNotNullRendered(item.detalhes)}" 
+							value="Clique Aqui" onclick="PF('mdl_detalhes').show();" />
+					</p:column>
+					<p:column headerText="Acoes" style="width:100px"> 
+						<p:commandButton actionListener="#{administrativoController.comandoPrintDoUsuario(item.usuario_id)}"
+							 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Bater Print da tela do usuario" icon="ui-icon-image" />
+						<p:commandButton actionListener="#{administrativoController.comandoThemaBasic(item.usuario_id)}"
+							 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Muda o thema do usuario" icon="ui-icon-contact" />
+						<p:commandButton actionListener="#{administrativoController.comandoCopieProcesso(item.usuario_id)}"
+						 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Carregar Processos" icon="ui-icon-document-b" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>	

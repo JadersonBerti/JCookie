@@ -1,0 +1,59 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui" >
+			    
+	<ui:define name="conteudoSite">
+		<script type="text/javascript">
+			/*alert("Para ultilizar o ExtremeAntXiter é obrigatorio o java instalado !");*/
+		</script>
+	
+		<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl/>
+		</p:outputPanel>
+		
+		<!-- Loader para cadastro do player -->
+		<p:dialog modal="true" id="modalLoader" widgetVar="statusDialog" header="Aguarde estamos inscrevendo voce no campeonato.."   
+        	draggable="false" closable="false">
+    		<p:graphicImage width="336" height="15" library="image" name="loaders07.gif" />
+		</p:dialog>
+		
+		<p:dialog header="Mensagem de erro" widgetVar="erro">
+			<img style="border:solid red" src="../resources/image/erro.png" />
+		</p:dialog>
+		
+		<!-- Formulario de cadastro -->
+		<h:form enctype="multipart/form-data">
+			<p:panel header="Download do ant xiter" style="height:500px;">
+				<string>Caso apareça esta mensagem <p:commandLink style="color:#349ce6" onclick="PF('erro').show();" value="clique aqui" />, aperte Ctrl + j e clique em manter. 
+					O Navegador detecta um falso-positvo porque o mesmo monitora a atividade do computador.
+				</string>
+				<br/><br/>
+				
+				<br/><br/><br/><br/>
+				<a style="float: left;margin-left: 82px" href="../resources/download/XK-AntXiter-Instalador.exe">
+					<p:graphicImage style="margin-left:10px;border: solid #349ce6;border-radius: 15px" library="image" name="download.png" /><br/>
+					<strong style="margin-left:10px;color:#349ce6">Ant Cheat - Warface - versão 1.0</strong><br/>
+					<strong style="margin-left:28px;color:#349ce6">Para 'Campeonato' &amp; 'Mix'</strong>
+				</a>
+				<!-- <a href="../resources/download/XK-AntXiter-Instalador.exe">
+					<p:graphicImage style="margin-left:10px" library="image" name="download.png" /><br/>
+					<strong style="margin-left:10px;color:red">Ant Xiter - Warface - versão 1.0</strong>
+					<strong style="margin-left:60px;color:red">Para jogo normal</strong>
+				</a> -->
+				
+				<br/><br/><br/><br/>
+				
+				<center>
+					<strong>Caso voce não tenha o java instalado.</strong><br/>
+					<strong>Link para Java: <a style="color:#349ce6" href="https://www.java.com/pt_BR/download/">Clique aqui</a></strong>
+				</center>
+			</p:panel>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>	

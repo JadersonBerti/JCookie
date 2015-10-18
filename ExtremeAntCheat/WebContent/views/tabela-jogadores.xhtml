@@ -1,0 +1,133 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui">
+			    
+	<ui:define name="conteudoSite">
+		<h:outputScript library="js" name="tabela-jogadores.js" />
+		
+		<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl autoUpdate="true"/>
+		</p:outputPanel>
+		
+		<p:dialog header="Login" widgetVar="loginWarface" draggable="true" modal="true">
+			<h:form>
+				<p:messages id="msg_login_warface" autoUpdate="true" closable="true" />
+				<p:outputLabel value="Seu email " />
+				<p:inputText style="width:172px" value="#{tabelaJogadoresController.usuario.email}" /><br/><br/>
+				
+				<p:outputLabel style="margin-left:" value="Sua senha " />
+				<p:inputText value="#{tabelaJogadoresController.usuario.senhaAntXiter}" /><br/><br/>
+				
+				<p:commandButton value="Autenticar" onclick="PF('statusDialog').show();" 
+					style="margin-left:75px;width:150px" oncomplete="PF('statusDialog').hide();" 
+					actionListener="#{tabelaJogadoresController.verificaCodigo()}" ajax="true"
+					update=":teste,msg_login_warface" />
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog  header="Atualizar dados do jogador" widgetVar="ataulizarWarface" draggable="false" modal="true">
+			<h:form id="teste">
+				<p:messages autoUpdate="true" />
+				
+				<p:outputLabel for="nomeJogadorTabela" value="Nome completo do jogador" />
+				<p:commandButton style="margin:0 0 4px 84px" value="Excluir Minha Conta" icon="ui-icon-close" 
+						actionListener="#{tabelaJogadoresController.sairCampeonato()}">
+					<p:confirm header="Confirmação" message="Você deve mesmo sair?" icon="ui-icon-alert" />	
+				</p:commandButton><br/>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+        			<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    			</p:confirmDialog>
+    			
+				<p:inputText id="nomeJogadorTabela" requiredMessage="Nome Obrigatorio" value="#{tabelaJogadoresController.usuario.nome}" 
+					required="true" style="width:400px" /><br/><br/>
+				
+				<p:outputLabel for="email" value="Email que foi cadastrado no warface" /><br/>
+				<p:inputText id="email" requiredMessage="Email Obrigatorio" value="#{tabelaJogadoresController.usuario.email}" 
+						required="true" style="width:400px" /><br/><br/>
+				
+				<p:outputLabel for="loginwarfaceTabela" value="Login do warface" /><br/>
+				<p:inputText id="loginwarfaceTabela" requiredMessage="Login do warface Obrigatorio" value="#{tabelaJogadoresController.usuario.nickJogo}"
+					required="true" style="width:400px" /><br/><br/>
+					
+				<p:outputLabel for="nickTabela" value="Nick completo jogador do warface" /><br/>
+				<p:inputText id="nickTabela" requiredMessage="Nick do jogador Obrigatorio" value="#{tabelaJogadoresController.usuario.nickJogo}"
+					required="true" style="width:400px" /><br/><br/>
+						
+				<p:outputLabel for="codigoAntxiterTabela" value="Crie um senha de indetificação para AntXiter" /><br/>
+				<p:inputText id="codigoAntxiterTabela" requiredMessage="senha de indetificação para AntXiter Obrigatorio" 
+					value="#{tabelaJogadoresController.usuario.senhaAntXiter}"
+					required="true" style="width:400px" /><br/><br/>
+				<h:inputHidden value="#{tabelaJogadoresController.usuario.senhaAntXiter}" />
+				
+				<p:commandButton icon="ui-icon-disk" update=":tabelaDeJogadoreas" onclick="PF('loginWarface').hide();" ajax="true" value="Ataulizar" style="padding:6px 165px 6px 165px"
+					 actionListener="#{tabelaJogadoresController.atualizarJogador()}" />
+			</h:form>
+		</p:dialog>
+		
+		<!-- Formulario de cadastro -->
+		<h:form id="tabelaDeJogadoreas">
+			<p:panel header="Tabela de usuarios que utilizam o ExtremeAntCheat" 
+				 style="width:634px;height:400px;overflow-y: scroll;">
+				<p:messages for="id_message_form_jogador_warface" closable="true" autoUpdate="true" />
+				 
+				 <p:fieldset style="width:344px !important;float:left">
+				 	<p:outputLabel value="Buscar jogador " />
+				 	<p:inputText value="#{tabelaJogadoresController.nomeUsuario}" placeholder="Nick ou Nome" />
+				 	<p:commandButton actionListener="#{tabelaJogadoresController.buscarUsuario()}" value="Buscar" 
+				 		style="margin:3px 0 0 5px" update=":formualario-tela-busca"/>
+				 </p:fieldset>
+				 
+				 <p:commandButton icon="ui-icon-disk" style="margin:10px 0 0 41px" 
+				 	ajax="true" value="Editar meus dados" onclick="PF('loginWarface').show();" /><br/>
+				 
+				 <p:spacer height="10" />
+				 <p:separator />
+				 <p:spacer height="10" />
+				 
+				<ui:repeat var="player" value="#{tabelaJogadoresController.usuariosWarface}">
+					<div class="box">
+						<h:graphicImage style="float:left;display:block" width="80" height="70" 
+							value="#{tabelaJogadoresController.getFotoBse64(player.fotoByte)}" />
+						<strong style="float:left">Nome: <p:outputLabel value="#{player.nome}" /></strong><br/>
+						<strong>Nick no warface: <p:outputLabel value="#{player.nickJogo}" /></strong><br/>
+						<strong>Sexo: <p:outputLabel value="#{tabelaJogadoresController.getSexo(player.sexo)}" /></strong><br/>
+						<strong>Data de Nacimento: <p:outputLabel value="#{player.dataNacimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</p:outputLabel></strong><br/>
+					</div>	
+				</ui:repeat>
+			</p:panel>
+			<p:panel style="width:634px;">
+				<h:form>
+					<center>
+						<p:commandButton style="width:316px" value="Mais Resutados" 
+							update=":tabelaDeJogadoreas" onclick="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();"
+							actionListener="#{tabelaJogadoresController.maisResutado()}" />
+					</center>
+				</h:form>
+			</p:panel>
+		</h:form>
+		
+		<p:dialog header="Tela de busca" widgetVar="retorno_busca_usuario" modal="true">
+			<h:form id="formualario-tela-busca">
+				<div class="box">
+					<h:graphicImage style="float:left;display:block" width="80" height="70" 
+						value="#{tabelaJogadoresController.getFotoBse64(tabelaJogadoresController.usuario.fotoByte)}" />
+					<strong style="float:left">Nome: <p:outputLabel value="#{tabelaJogadoresController.usuario.nome}" /></strong><br/>
+					<strong>Nick no warface: <p:outputLabel value="#{tabelaJogadoresController.usuario.nickJogo}" /></strong><br/>
+					<strong>Sexo: <p:outputLabel value="#{tabelaJogadoresController.getSexo(tabelaJogadoresController.usuario.sexo)}" /></strong><br/>
+					<strong>Data de Nacimento: <p:outputLabel value="#{tabelaJogadoresController.usuario.dataNacimento}">
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</p:outputLabel></strong><br/>
+				</div>
+			</h:form>
+		</p:dialog>
+		
+	</ui:define>
+</ui:composition>		

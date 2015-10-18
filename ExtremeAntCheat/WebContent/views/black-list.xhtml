@@ -1,0 +1,47 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui" >
+			    
+	<ui:define name="conteudoSite">
+		<!-- Modeal grow de message filtra qual message -->
+		<p:outputPanel autoUpdate="true">
+			<p:growl/>
+		</p:outputPanel>
+		
+		<!-- Loader para cadastro do player -->
+		<p:dialog modal="true" id="modalLoader" widgetVar="statusDialog" header="Aguarde estamos inscrevendo voce no campeonato.."   
+        	draggable="false" closable="false">
+    		<p:graphicImage width="336" height="15" library="image" name="loaders07.gif" />
+		</p:dialog>
+		
+		<!-- Formulario de cadastro -->
+		<h:form>
+			<p:panel header="Tabela de participantes do campionato">
+				<p:dataTable value="#{blackListController.blackList}" var="item">
+					<p:column headerText="Id">
+						#{item.id}
+					</p:column>
+					<p:column headerText="Nome Jogador">
+						#{item.nomeJogador}
+					</p:column>
+					<p:column headerText="Nome Cheat">
+						#{item.nomeXiter}
+					</p:column>
+					<p:column headerText="Data">
+						<h:outputText value="#{item.dataUsoXiter}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Solucionado">
+						#{item.solucionado}
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
