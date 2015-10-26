@@ -1,6 +1,0 @@
-target
-.settings/*
-!.settings/.jsdtscope
-.project
-.classpath
-/build/

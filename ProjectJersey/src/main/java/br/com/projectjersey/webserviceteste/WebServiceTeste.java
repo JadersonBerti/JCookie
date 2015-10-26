@@ -45,7 +45,6 @@ public class WebServiceTeste {
 	
 	@Test
 	public void cadastroCurriculo(){
-		@SuppressWarnings("resource")
 		HttpClient client = new DefaultHttpClient();
 	    HttpPost post = new HttpPost("http://localhost:8080/ProjectJersey/curriculo/cadastro");
 	    try {
@@ -101,7 +100,6 @@ public class WebServiceTeste {
 	
 	@Test
 	public void cadastroHabilidade(){
-		@SuppressWarnings("resource")
 		HttpClient client = new DefaultHttpClient();
 	    HttpPost post = new HttpPost("http://localhost:8080/ProjectJersey/habilidade/cadastro");
 	    try {
