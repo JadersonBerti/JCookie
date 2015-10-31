@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.com.jcookies.cookieapi.CookieApi;
 import br.com.jcookies.cookieapimpl.CookieApiImpl;
+import br.com.jcookies.enums.TimeSleep;
 import br.com.jcookies.util.Util;
 
 public abstract class GenericCookie {
@@ -22,7 +23,7 @@ public abstract class GenericCookie {
 	protected static HttpServletResponse response = null;
 	
 	/** Um load basico de dados que serao usados com default **/
-	protected final int defaultTime = 60 * 60 * 24 * 30; // expira em 1 mês  
+	protected final int defaultTime = TimeSleep.TRINTA_DIAS.getTime(); // expira em 1 mês  
 	protected String defaultComment;
 	
 	protected List<Cookie> cookies = new ArrayList<>();

@@ -90,6 +90,7 @@ public class CookieApiImpl extends GenericCookie implements CookieApi {
     	
     	if(cookie != null){
     	    cookie.setMaxAge(0);
+    	    cookie.setPath(GenericCookie.request.getContextPath());
     	    this.saveCookie(cookie);
     	    return true;
     	}else{
