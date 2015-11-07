@@ -64,7 +64,7 @@ public abstract class GenericCookie {
 	}
 	
 	protected String nameDefaultCookie(){
-		return String.format("Cash %s", Util.getNameProjetc(this.realPath()));
+		return String.format("Cash %s", this.realPath());
 	}
 	
 }

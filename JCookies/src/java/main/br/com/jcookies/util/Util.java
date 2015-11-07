@@ -1,6 +1,7 @@
 package br.com.jcookies.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -8,9 +9,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Util {
-
+	
 	public static String getNameProjetc(String realPath){
-		realPath = realPath.replaceAll("\\\\", "&");
+		String barra = File.separator;
+		realPath = realPath.replaceAll(barra, "&");
 		String[] projeto = realPath.split("&");
 		return projeto[projeto.length - 1];	
 	}

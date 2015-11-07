@@ -39,7 +39,7 @@ public class CookieApiImpl extends GenericCookie implements CookieApi {
 	    if(domain != null)
 	    		cookie.setDomain(domain);
 	    	
-	    cookie.setVersion(1);
+	    cookie.setVersion(version != null ? version : 1);
 	    cookie.setValue(value);
 	    saveCookie(cookie);
 	}
@@ -162,8 +162,10 @@ public class CookieApiImpl extends GenericCookie implements CookieApi {
 	
 	@Override
     public boolean existCookieByName(String name){
- 		cookies = Arrays.asList(GenericCookie.request.getCookies());
-
+		boolean hasValueCookie = GenericCookie.request.getCookies() != null && 
+				GenericCookie.request.getCookies().length > 0;
+				
+		cookies = hasValueCookie ? Arrays.asList(GenericCookie.request.getCookies()) : null;
  		if(cookies != null && !cookies.isEmpty()){
  			for (Cookie cookie : cookies) {  
  			     if (cookie.getName() != null && cookie.getName().equals(name)) {
